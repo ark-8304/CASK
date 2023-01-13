@@ -1,4 +1,6 @@
 import random
+import tkinter as tk
+import customtkinter as ctk
 
 #initialization for key
 master=[]
@@ -14,6 +16,13 @@ for i in range(0,24):
   temp1.pop((i%6)%2)
   temp2+=temp1
   master.append(temp2)
+
+root = ctk.CTk()
+root.title("C A S K")
+root.geometry("600x300")
+ctk.set_appearance_mode("dark")
+frame = ctk.CTkFrame(master=root,width=580,height=280,corner_radius=10, border_width=5, border_color="darkorange")
+frame.pack(padx=20, pady=20)
 
 def to95(x):
   if x>=1 and x<=95:
@@ -202,6 +211,7 @@ def decipher(code, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
 
 while True:
   n=int(input("Enter 1 to encode, 2 to decode, anything else to exit: "))
+  
   if n==1:
     k1=int(input("Enter Key one: "))
     k2=int(input("Enter Key two: "))
@@ -211,6 +221,7 @@ while True:
     pw=input("Enter Password: ")
     msg=input("Enter Message: ")
     print(cipher(msg, k1, k2, k3, k4, pn, pw))
+    
   elif n==2:
     k1=int(input("Enter Key one: "))
     k2=int(input("Enter Key two: "))
@@ -222,3 +233,4 @@ while True:
     print(decipher(cd, k1, k2, k3, k4, pn, pw))
   else:
     break
+root.mainloop()
