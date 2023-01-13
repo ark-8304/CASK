@@ -184,7 +184,7 @@ def decipher(code, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
   keyFour=Key(master[k4-1])
   keyFour.shift(pin)
   pList=keyOne.encode(passw)
-  code2=keyFour.encode(code)
+  code2=keyFour.encode(code[::-1])
   code3=keyThree.decode(code2)
   cList=keyTwo.encode(code3)
   count=0
