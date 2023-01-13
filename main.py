@@ -14,10 +14,9 @@ for i in range(0,24):
   temp1.pop((i%6)%2)
   temp2+=temp1
   master.append(temp2)
-print(master)
 
 def to95(x):
-  if x<=1 and 95>=x:
+  if x>=1 and x<=95:
     return x
   elif x>95:
     if x<1000:
@@ -142,13 +141,84 @@ class Key:
     return m_str
 
 def cipher(message, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
+  global master
   pin=[]
   for i in pinn:
     pin.append(int(i))
-  
+  keyOne=Key(master[k1-1])
+  keyOne.shift(pin)
+  keyTwo=Key(master[k2-1])
+  keyTwo.shift(pin)
+  keyThree=Key(master[k3-1])
+  keyThree.shift(pin)
+  keyFour=Key(master[k4-1])
+  keyFour.shift(pin)
+  c_list=keyOne.encode(message)
+  pList=keyOne.encode(passw)
+  c2List=[]
+  for i in range(0, len(c_list)):
+    c2List.append(to95(c_list[i]+pList[i%len(pList)]))
+  c3List=[]
+  count=0
+  for i in c2List:
+    r=ranFact(i)
+    for j in r:
+      c3List.append(to95(j+count))
+      count+=1
+  code1=keyTwo.decode(c3List)
+  code2=keyThree.encode(code1)
+  code3=keyFour.decode(code2)
+  return code3[::-1]
 
-keyone=Key(master[14])
-keyone.shift([1,0,5,9])
-print(keyone.encode("Hello! Test Case scenario"))
-for i in keyone.encode("Hello! Test Case scenario"):
-  print(ranFact(i))
+def decipher(code, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
+  global master
+  pin=[]
+  for i in pinn:
+    pin.append(int(i))
+  keyOne=Key(master[k1-1])
+  keyOne.shift(pin)
+  keyTwo=Key(master[k2-1])
+  keyTwo.shift(pin)
+  keyThree=Key(master[k3-1])
+  keyThree.shift(pin)
+  keyFour=Key(master[k4-1])
+  keyFour.shift(pin)
+  pList=keyOne.encode(passw)
+  code2=keyFour.encode(code)
+  code3=keyThree.decode(code2)
+  cList=keyTwo.encode(code3)
+  count=0
+  c2List=[]
+  for i in cList:
+    c2List.append(to95(i-count))
+    count+=1
+  c3List=[]
+  for i in range(0,len(c2List)//4):
+    c3List.append(c2List[4*i]*c2List[4*i+1]*c2List[4*i+2]*c2List[4*i+3])
+  mList=[]
+  for i in range(0, len(c3List)):
+    mList.append(to95(c3List[i]-pList[i%len(pList)]))
+  return keyOne.decode(mList)
+
+while True:
+  n=int(input("Enter 1 to encode, 2 to decode, anything else to exit: "))
+  if n==1:
+    k1=int(input("Enter Key one: "))
+    k2=int(input("Enter Key two: "))
+    k3=int(input("Enter Key three: "))
+    k4=int(input("Enter Key four: "))
+    pn=input("Enter 4 digit pin: ")
+    pw=input("Enter Password: ")
+    msg=input("Enter Message: ")
+    print(cipher(msg, k1, k2, k3, k4, pn, pw))
+  elif n==2:
+    k1=int(input("Enter Key one: "))
+    k2=int(input("Enter Key two: "))
+    k3=int(input("Enter Key three: "))
+    k4=int(input("Enter Key four: "))
+    pn=input("Enter 4 digit pin: ")
+    pw=input("Enter Password: ")
+    cd=input("Enter Code: ")
+    print(decipher(cd, k1, k2, k3, k4, pn, pw))
+  else:
+    break
