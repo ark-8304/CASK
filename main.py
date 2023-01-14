@@ -17,13 +17,6 @@ for i in range(0,24):
   temp2+=temp1
   master.append(temp2)
 
-root = ctk.CTk()
-root.title("C A S K")
-root.geometry("600x300")
-ctk.set_appearance_mode("dark")
-frame = ctk.CTkFrame(master=root,width=580,height=280,corner_radius=10, border_width=5, border_color="darkorange")
-frame.pack(padx=20, pady=20)
-
 def to95(x):
   if x>=1 and x<=95:
     return x
@@ -209,6 +202,21 @@ def decipher(code, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
     mList.append(to95(c3List[i]-pList[i%len(pList)]))
   return keyOne.decode(mList)
 
+
+root = ctk.CTk()
+root.title("C A S K")
+root.geometry("1200x600")
+root.configure(fg_color="black")
+ctk.set_appearance_mode("dark")
+titleLabel = ctk.CTkLabel(master=root,width=1180,height=170,corner_radius=10, fg_color="gray25", font=("Times",70), text="C\tA\tS\tK", text_color="darkorange")
+titleLabel.pack(pady=10)
+mainLabel = ctk.CTkLabel(master=root,width=1180,height=140,corner_radius=10, fg_color="gray25", font=("Times",30), text="Cipher\t\tAdopting\t\tShifted\t\tKey",text_color="cyan")
+mainLabel.pack()
+buttonLabel = ctk.CTkLabel(master=root,width=1180,height=250,corner_radius=10, fg_color="gray25")
+buttonLabel.pack(pady=10)
+
+root.mainloop()
+
 while True:
   n=int(input("Enter 1 to encode, 2 to decode, anything else to exit: "))
   
@@ -233,4 +241,4 @@ while True:
     print(decipher(cd, k1, k2, k3, k4, pn, pw))
   else:
     break
-root.mainloop()
+
