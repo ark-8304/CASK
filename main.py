@@ -202,20 +202,95 @@ def decipher(code, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
     mList.append(to95(c3List[i]-pList[i%len(pList)]))
   return keyOne.decode(mList)
 
+def all_children (window) :
+    _list = window.winfo_children()
 
+    for item in _list :
+        if item.winfo_children() :
+            _list.extend(item.winfo_children())
+
+    return _list
+  
 root = ctk.CTk()
 root.title("C A S K")
 root.geometry("1200x600")
 root.configure(fg_color="black")
 ctk.set_appearance_mode("dark")
-titleLabel = ctk.CTkLabel(master=root,width=1180,height=170,corner_radius=10, fg_color="gray25", font=("Times",70), text="C\tA\tS\tK", text_color="darkorange")
-titleLabel.pack(pady=10)
-mainLabel = ctk.CTkLabel(master=root,width=1180,height=140,corner_radius=10, fg_color="gray25", font=("Times",30), text="Cipher\t\tAdopting\t\tShifted\t\tKey",text_color="cyan")
-mainLabel.pack()
-buttonLabel = ctk.CTkLabel(master=root,width=1180,height=250,corner_radius=10, fg_color="gray25")
-buttonLabel.pack(pady=10)
 
-root.mainloop()
+def welc():
+  global root
+  widget_list = all_children(root)
+  for item in widget_list:
+      item.pack_forget()
+  widget_list = all_children(root)
+  for item in widget_list:
+      item.grid_forget()
+  titleLabel = ctk.CTkLabel(master=root,width=1180,height=170,corner_radius=10, fg_color="gray25", font=("Times",70), text="C\tA\tS\tK", text_color="darkorange")
+  titleLabel.pack(pady=10)
+  mainLabel = ctk.CTkLabel(master=root,width=1180,height=140,corner_radius=10, fg_color="gray25", font=("Times",30), text="Cipher\t\tAdopting\t\tShifted\t\tKey",text_color="darkorange")
+  mainLabel.pack()
+  buttonCipher = ctk.CTkButton(master=root,width=270,height=75, fg_color="gray25", text="CIPHER",font=("Times",30), border_width=10, border_color="lawngreen", text_color="lawngreen", command=winCipher)
+  buttonCipher.pack(pady=10)
+  buttonDecipher = ctk.CTkButton(master=root,width=270,height=75, fg_color="gray25", text="DECIPHER",font=("Times",30), border_width=10, border_color="cyan",text_color="cyan")
+  buttonDecipher.pack(pady=10)
+  buttonExit = ctk.CTkButton(master=root,width=270,height=75, fg_color="gray25", text="Exit",font=("Times",30), border_width=10, border_color="red",text_color="red", command=root.destroy)
+  buttonExit.pack(pady=10)
+
+  root.mainloop()
+
+def winCipher():
+  global root
+  keyOpt=[]
+  for i in range(1,25):
+    keyOpt.append("Key {}".format(i))
+  widget_list = all_children(root)
+  pinOpt=[]
+  for i in range(0,10):
+    pinOpt.append(str(i))
+  for item in widget_list:
+      item.pack_forget()
+  widget_list = all_children(root)
+  for item in widget_list:
+      item.grid_forget()
+  root.columnconfigure(8)
+  root.rowconfigure(27)
+  backButton = ctk.CTkButton(master=root, width=300, height=30, fg_color="gray25", text="\u2770"+"  Back", font=("Times", 20), border_width=5, border_color="cyan", text_color="cyan", command=welc)
+  backButton.grid(row=0,column=0, rowspan=1, columnspan=2)
+  
+  keyLabel = ctk.CTkLabel(master=root, width=1200, height=30, fg_color="gray25", text="Select four keys in order:", font=("Times", 20), text_color="yellow")
+  keyLabel.grid(row=1, column=0, rowspan=1, columnspan=8)
+  keyMenu1 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu1.grid(row=2, column=0, rowspan=1, columnspan=2)
+  keyMenu2 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu2.grid(row=2, column=2, rowspan=1, columnspan=2)
+  keyMenu3 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu3.grid(row=2, column=4, rowspan=1, columnspan=2)
+  keyMenu4 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu4.grid(row=2, column=6, rowspan=1, columnspan=2)
+  
+  pinLabel = ctk.CTkLabel(master=root, width=600, height=30, fg_color="gray25", text="Enter four digit PIN:", font=("Times", 20), text_color="lawngreen")
+  pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
+  pinMenu1 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu1.grid(row=3, column=4, rowspan=1, columnspan=1)
+  pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
+  pinMenu2 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu2.grid(row=3, column=5, rowspan=1, columnspan=1)
+  pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
+  pinMenu3 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu3.grid(row=3, column=6, rowspan=1, columnspan=1)
+  pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
+  pinMenu4 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu4.grid(row=3, column=7, rowspan=1, columnspan=1)
+
+  passLabel = ctk.CTkLabel(master=root, width=600, height=30, fg_color="gray25", text="Enter Password(0-25 Characters, excess will be truncated): ", font=("Times", 20), text_color="deeppink")
+  passLabel.grid(row=4, column=0, rowspan=1, columnspan=4)
+  passEntry = ctk.CTkEntry(master=root, width=600, height=30, fg_color="grey25", font=("Times", 20), text_color="deeppink")
+  passEntry.grid(row=4, column=4, rowspan=1, columnspan=4)
+  
+  root.mainloop()
+  
+
+welc()
 
 while True:
   n=int(input("Enter 1 to encode, 2 to decode, anything else to exit: "))
