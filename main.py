@@ -233,7 +233,7 @@ def welc():
       item.grid_forget()
   titleLabel = ctk.CTkLabel(master=root,width=root.winfo_screenwidth()-20,height=root.winfo_screenheight()//3-60,corner_radius=10, fg_color="gray25", font=("Times",70), text="\u20A1\t\u20B3\t\u0586\t\u20AD", text_color="orangered")
   titleLabel.pack(pady=10)
-  mainLabel = ctk.CTkLabel(master=root,width=root.winfo_screenwidth()-20,height=root.winfo_screenheight()//3-150,corner_radius=10, fg_color="gray25", font=("Times",30), text="\u20A1ipher\t\t\u20B3lgorithm\t\t\u1D42\u1D35\u1D40\u1D34\t\u0586hifted\t\t\u20ADey",text_color="darkorange")
+  mainLabel = ctk.CTkLabel(master=root,width=root.winfo_screenwidth()-20,height=root.winfo_screenheight()//3-150,corner_radius=10, fg_color="gray25", font=("Times",30), text="\u20A1ipher\t\t\u20B3lgorithm\t\u1D42\u1D35\u1D40\u1D34\t\u0586hifted\t\t\u20ADey",text_color="darkorange")
   mainLabel.pack()
   buttonCipher = ctk.CTkButton(master=root,width=root.winfo_screenwidth()//4-20,height=root.winfo_screenheight()//8, fg_color="gray25", text="CIPHER",font=("Times",30), border_width=10, border_color="lawngreen", text_color="lawngreen", command=winCipher)
   buttonCipher.pack(pady=10)
@@ -333,10 +333,10 @@ def winCipher():
     pwStr=passEntry.get()[0:26]
 
     mStr=mText.get('1.0', tk.END)
-
-    cde=cipher(mStr, K1, K2, K3, K4, pinng, pwStr)
-
-    
+    try:
+      cde=cipher(mStr, K1, K2, K3, K4, pinng, pwStr)
+    except:
+      cde="~~~Incorrect Key~~~"
     outText.configure(state="normal")
     outText.delete('1.0 linestart', tk.END)
     outText.insert('1.0', text=cde)
@@ -444,8 +444,10 @@ def winDecipher():
 
     mStr=mText.get('1.0', tk.END)
 
-    cde=decipher(mStr, K1, K2, K3, K4, pinng, pwStr)
-    
+    try:
+      cde=decipher(mStr, K1, K2, K3, K4, pinng, pwStr)
+    except:
+      cde="~~~Incorrect Key~~~"
     outText.configure(state="normal")
     outText.delete('1.0 linestart', tk.END)
     outText.insert('1.0', text=cde)
