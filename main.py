@@ -158,8 +158,11 @@ def cipher(message, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
   c_list=keyOne.encode(message)
   pList=keyOne.encode(passw)
   c2List=[]
-  for i in range(0, len(c_list)):
-    c2List.append(to95(c_list[i]+pList[i%len(pList)]))
+  if len(pList)!=0:
+    for i in range(0, len(c_list)):
+      c2List.append(to95(c_list[i]+pList[i%len(pList)]))
+  else:
+    c2List=c_list.copy()
   c3List=[]
   count=0
   for i in c2List:
@@ -198,8 +201,11 @@ def decipher(code, k1=1, k2=1, k3=1, k4=1, pinn="0000", passw="password"):
   for i in range(0,len(c2List)//4):
     c3List.append(c2List[4*i]*c2List[4*i+1]*c2List[4*i+2]*c2List[4*i+3])
   mList=[]
-  for i in range(0, len(c3List)):
-    mList.append(to95(c3List[i]-pList[i%len(pList)]))
+  if len(pList)!=0:
+    for i in range(0, len(c3List)):
+      mList.append(to95(c3List[i]-pList[i%len(pList)]))
+  else:
+    mList=c3List.copy()
   return keyOne.decode(mList)
 
 def all_children (window) :
@@ -213,7 +219,7 @@ def all_children (window) :
   
 root = ctk.CTk()
 root.title("C A S K")
-root.geometry("1200x600")
+root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()-90))
 root.configure(fg_color="black")
 ctk.set_appearance_mode("dark")
 
@@ -225,15 +231,15 @@ def welc():
   widget_list = all_children(root)
   for item in widget_list:
       item.grid_forget()
-  titleLabel = ctk.CTkLabel(master=root,width=1180,height=170,corner_radius=10, fg_color="gray25", font=("Times",70), text="\u20A1\t\u20B3\t\u0586\t\u20AD", text_color="orangered")
+  titleLabel = ctk.CTkLabel(master=root,width=root.winfo_screenwidth()-20,height=root.winfo_screenheight()//3-60,corner_radius=10, fg_color="gray25", font=("Times",70), text="\u20A1\t\u20B3\t\u0586\t\u20AD", text_color="orangered")
   titleLabel.pack(pady=10)
-  mainLabel = ctk.CTkLabel(master=root,width=1180,height=140,corner_radius=10, fg_color="gray25", font=("Times",30), text="Cipher\t\tAlgorithm\t\u1D42\u1D35\u1D40\u1D34\t\tShifted\t\tKey",text_color="darkorange")
+  mainLabel = ctk.CTkLabel(master=root,width=root.winfo_screenwidth()-20,height=root.winfo_screenheight()//3-150,corner_radius=10, fg_color="gray25", font=("Times",30), text="\u20A1ipher\t\t\u20B3lgorithm\t\t\u1D42\u1D35\u1D40\u1D34\t\u0586hifted\t\t\u20ADey",text_color="darkorange")
   mainLabel.pack()
-  buttonCipher = ctk.CTkButton(master=root,width=270,height=75, fg_color="gray25", text="CIPHER",font=("Times",30), border_width=10, border_color="lawngreen", text_color="lawngreen", command=winCipher)
+  buttonCipher = ctk.CTkButton(master=root,width=root.winfo_screenwidth()//4-20,height=root.winfo_screenheight()//8, fg_color="gray25", text="CIPHER",font=("Times",30), border_width=10, border_color="lawngreen", text_color="lawngreen", command=winCipher)
   buttonCipher.pack(pady=10)
-  buttonDecipher = ctk.CTkButton(master=root,width=270,height=75, fg_color="gray25", text="DECIPHER",font=("Times",30), border_width=10, border_color="cyan",text_color="cyan", command=winDecipher)
+  buttonDecipher = ctk.CTkButton(master=root,width=root.winfo_screenwidth()//4-20,height=root.winfo_screenheight()//8, fg_color="gray25", text="DECIPHER",font=("Times",30), border_width=10, border_color="cyan",text_color="cyan", command=winDecipher)
   buttonDecipher.pack(pady=10)
-  buttonExit = ctk.CTkButton(master=root,width=270,height=75, fg_color="gray25", text="Exit",font=("Times",30), border_width=10, border_color="red",text_color="red", command=root.destroy)
+  buttonExit = ctk.CTkButton(master=root,width=root.winfo_screenwidth()//4-20,height=root.winfo_screenheight()//8, fg_color="gray25", text="Exit",font=("Times",30), border_width=10, border_color="red",text_color="red", command=root.destroy)
   buttonExit.pack(pady=10)
 
   root.mainloop()
@@ -255,52 +261,49 @@ def winCipher():
   keyOpt=[]
   for i in range(1,25):
     keyOpt.append("Key {}".format(i))
-  widget_list = all_children(root)
   pinOpt=[]
   for i in range(0,10):
     pinOpt.append(str(i))
-  for item in widget_list:
-      item.pack_forget()
+  
   widget_list = all_children(root)
   for item in widget_list:
-      item.grid_forget()
+      item.pack_forget()
   root.columnconfigure(8)
   root.rowconfigure(20)
-  backButton = ctk.CTkButton(master=root, width=300, height=30, fg_color="gray25", text="\u2770"+"  Back", font=("Times", 20), border_width=5, border_color="cyan", text_color="cyan", command=welc)
+  backButton = ctk.CTkButton(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, fg_color="gray25", text="\u2770"+"  Back", font=("Times", 20), border_width=5, border_color="cyan", text_color="cyan", command=welc)
   backButton.grid(row=0,column=0, rowspan=1, columnspan=2)
   
-  keyLabel = ctk.CTkLabel(master=root, width=1200, height=30, fg_color="gray25", text="Select four keys in order:", font=("Times", 20), text_color="yellow")
+  keyLabel = ctk.CTkLabel(master=root, width=root.winfo_screenwidth(), height=root.winfo_screenheight()//20, fg_color="gray25", text="Select four keys in order:", font=("Times", 20), text_color="yellow")
   keyLabel.grid(row=1, column=0, rowspan=1, columnspan=8)
-  keyMenu1 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu1 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu1.grid(row=2, column=0, rowspan=1, columnspan=2)
-  keyMenu2 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu2 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu2.grid(row=2, column=2, rowspan=1, columnspan=2)
-  keyMenu3 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu3 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu3.grid(row=2, column=4, rowspan=1, columnspan=2)
-  keyMenu4 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu4 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu4.grid(row=2, column=6, rowspan=1, columnspan=2)
   
-  pinLabel = ctk.CTkLabel(master=root, width=600, height=30, fg_color="gray25", text="Enter four digit PIN:", font=("Times", 20), text_color="lawngreen")
+  pinLabel = ctk.CTkLabel(master=root, width=root.winfo_screenwidth()//2, height=root.winfo_screenheight()//20, fg_color="gray25", text="Enter four digit PIN:", font=("Times", 20), text_color="lawngreen")
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu1 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu1 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu1.grid(row=3, column=4, rowspan=1, columnspan=1)
-  pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu2 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu2 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu2.grid(row=3, column=5, rowspan=1, columnspan=1)
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu3 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu3 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu3.grid(row=3, column=6, rowspan=1, columnspan=1)
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu4 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu4 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu4.grid(row=3, column=7, rowspan=1, columnspan=1)
 
   
-  passEntry = ctk.CTkEntry(master=root, width=600, height=30, fg_color="grey25", font=("Times", 20), text_color="deeppink", placeholder_text="Enter Password(0-25 Characters, excess will be truncated)....", placeholder_text_color="grey70")
+  passEntry = ctk.CTkEntry(master=root, width=root.winfo_screenwidth()//2, height=root.winfo_screenheight()//20, fg_color="grey25", font=("Times", 20), text_color="deeppink", placeholder_text="Enter Password(0-25 Characters, excess will be truncated)....", placeholder_text_color="grey70")
   passEntry.grid(row=4, column=0, rowspan=1, columnspan=4)
 
-  mLabel = ctk.CTkLabel(master=root, width=600, height=30, fg_color="grey25", font=("Times", 20), text_color="darkorange", text="Enter text to be encoded below:")
+  mLabel = ctk.CTkLabel(master=root, width=root.winfo_screenwidth()//2, height=root.winfo_screenheight()//20, fg_color="grey25", font=("Times", 20), text_color="darkorange", text="Enter text to be encoded below:")
   mLabel.grid(row=4, column=4, rowspan=1, columnspan=4)
-  mText = ctk.CTkTextbox(master=root, width=1200, height=200, fg_color="grey25", font=("Times", 20), text_color="darkorange", border_width=5, border_color="darkorange")
+  mText = ctk.CTkTextbox(master=root, width=root.winfo_screenwidth(), height=root.winfo_screenheight()//3-90, fg_color="grey25", font=("Times", 20), text_color="darkorange", border_width=5, border_color="darkorange")
   mText.grid(row=5, column=0, rowspan=7, columnspan=8)
 
   def guiEncode():
@@ -337,14 +340,15 @@ def winCipher():
     outText.configure(state="normal")
     outText.delete('1.0 linestart', tk.END)
     outText.insert('1.0', text=cde)
+    outText.configure(text_color="darkgoldenrod1")
     outText.configure(state="disabled")
   
-  cButton = ctk.CTkButton(master=root, width=300, height=30, fg_color="gray25", text="Encode", font=("Times", 20), border_width=5, border_color="snow", text_color="snow", command=guiEncode)
+  cButton = ctk.CTkButton(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, fg_color="gray25", text="\u21A3 Encode \u21A2", font=("Times", 20), border_width=5, border_color="snow", text_color="snow", command=guiEncode)
   cButton.grid(row=12, column=0, rowspan=1, columnspan=8)
 
-  outText = ctk.CTkTextbox(master=root, width=1200, height=200, fg_color="grey25", font=("Times", 20), text_color="darkgoldenrod1", border_width=5, border_color="darkgoldenrod1")
+  outText = ctk.CTkTextbox(master=root, width=root.winfo_screenwidth(), height=root.winfo_screenheight()//3, fg_color="grey25", font=("Times", 20), text_color="grey70", border_width=5, border_color="darkgoldenrod1")
   outText.grid(row=13, column=0, columnspan=8, rowspan=7)
-  outText.insert('1.0', text="Your code will appear here: ")
+  outText.insert('1.0', text="Your code will appear here...")
   outText.configure(state="disabled")
   
   root.mainloop()
@@ -367,52 +371,49 @@ def winDecipher():
   keyOpt=[]
   for i in range(1,25):
     keyOpt.append("Key {}".format(i))
-  widget_list = all_children(root)
   pinOpt=[]
   for i in range(0,10):
     pinOpt.append(str(i))
-  for item in widget_list:
-      item.pack_forget()
   widget_list = all_children(root)
   for item in widget_list:
-      item.grid_forget()
+      item.pack_forget()
   root.columnconfigure(8)
   root.rowconfigure(20)
-  backButton = ctk.CTkButton(master=root, width=300, height=30, fg_color="gray25", text="\u2770"+"  Back", font=("Times", 20), border_width=5, border_color="cyan", text_color="cyan", command=welc)
+  backButton = ctk.CTkButton(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, fg_color="gray25", text="\u2770"+"  Back", font=("Times", 20), border_width=5, border_color="cyan", text_color="cyan", command=welc)
   backButton.grid(row=0,column=0, rowspan=1, columnspan=2)
   
-  keyLabel = ctk.CTkLabel(master=root, width=1200, height=30, fg_color="gray25", text="Select four keys in order:", font=("Times", 20), text_color="yellow")
+  keyLabel = ctk.CTkLabel(master=root, width=root.winfo_screenwidth(), height=root.winfo_screenheight()//20, fg_color="gray25", text="Select four keys in order:", font=("Times", 20), text_color="yellow")
   keyLabel.grid(row=1, column=0, rowspan=1, columnspan=8)
-  keyMenu1 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu1 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu1.grid(row=2, column=0, rowspan=1, columnspan=2)
-  keyMenu2 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu2 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu2.grid(row=2, column=2, rowspan=1, columnspan=2)
-  keyMenu3 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu3 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu3.grid(row=2, column=4, rowspan=1, columnspan=2)
-  keyMenu4 = ctk.CTkOptionMenu(master=root, width=300, height=30, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
+  keyMenu4 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, values=keyOpt, fg_color="grey25", text_color="yellow", font=("Times", 20), dropdown_text_color="yellow")
   keyMenu4.grid(row=2, column=6, rowspan=1, columnspan=2)
   
-  pinLabel = ctk.CTkLabel(master=root, width=600, height=30, fg_color="gray25", text="Enter four digit PIN:", font=("Times", 20), text_color="lawngreen")
+  pinLabel = ctk.CTkLabel(master=root, width=root.winfo_screenwidth()//2, height=root.winfo_screenheight()//20, fg_color="gray25", text="Enter four digit PIN:", font=("Times", 20), text_color="lawngreen")
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu1 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu1 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu1.grid(row=3, column=4, rowspan=1, columnspan=1)
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu2 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu2 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu2.grid(row=3, column=5, rowspan=1, columnspan=1)
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu3 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu3 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu3.grid(row=3, column=6, rowspan=1, columnspan=1)
   pinLabel.grid(row=3, column=0, rowspan=1, columnspan=4)
-  pinMenu4 = ctk.CTkOptionMenu(master=root, width=150, height=30, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
+  pinMenu4 = ctk.CTkOptionMenu(master=root, width=root.winfo_screenwidth()//8, height=root.winfo_screenheight()//20, values=pinOpt, fg_color="grey25", text_color="lawngreen", font=("Times", 20), dropdown_text_color="lawngreen")
   pinMenu4.grid(row=3, column=7, rowspan=1, columnspan=1)
 
   
-  passEntry = ctk.CTkEntry(master=root, width=600, height=30, fg_color="grey25", font=("Times", 20), text_color="deeppink", placeholder_text="Enter Password(0-25 Characters, excess will be truncated)....", placeholder_text_color="grey70")
+  passEntry = ctk.CTkEntry(master=root, width=root.winfo_screenwidth()//2, height=root.winfo_screenheight()//20, fg_color="grey25", font=("Times", 20), text_color="deeppink", placeholder_text="Enter Password(0-25 Characters, excess will be truncated)....", placeholder_text_color="grey70")
   passEntry.grid(row=4, column=0, rowspan=1, columnspan=4)
 
-  mLabel = ctk.CTkLabel(master=root, width=600, height=30, fg_color="grey25", font=("Times", 20), text_color="darkorange", text="Enter code to be decoded below:")
+  mLabel = ctk.CTkLabel(master=root, width=root.winfo_screenwidth()//2, height=root.winfo_screenheight()//20, fg_color="grey25", font=("Times", 20), text_color="darkorange", text="Enter code to be decoded below:")
   mLabel.grid(row=4, column=4, rowspan=1, columnspan=4)
-  mText = ctk.CTkTextbox(master=root, width=1200, height=200, fg_color="grey25", font=("Times", 20), text_color="darkorange", border_width=5, border_color="darkorange")
+  mText = ctk.CTkTextbox(master=root, width=root.winfo_screenwidth(), height=root.winfo_screenheight()//3, fg_color="grey25", font=("Times", 20), text_color="darkorange", border_width=5, border_color="darkorange")
   mText.grid(row=5, column=0, rowspan=7, columnspan=8)
 
   def guiDecode():
@@ -448,14 +449,15 @@ def winDecipher():
     outText.configure(state="normal")
     outText.delete('1.0 linestart', tk.END)
     outText.insert('1.0', text=cde)
+    outText.configure(text_color="darkgoldenrod1")
     outText.configure(state="disabled")
   
-  cButton = ctk.CTkButton(master=root, width=300, height=30, fg_color="gray25", text="Decode", font=("Times", 20), border_width=5, border_color="snow", text_color="snow", command=guiDecode)
+  cButton = ctk.CTkButton(master=root, width=root.winfo_screenwidth()//4, height=root.winfo_screenheight()//20, fg_color="gray25", text="\u21A2 Decode \u21A3", font=("Times", 20), border_width=5, border_color="snow", text_color="snow", command=guiDecode)
   cButton.grid(row=12, column=0, rowspan=1, columnspan=8)
 
-  outText = ctk.CTkTextbox(master=root, width=1200, height=200, fg_color="grey25", font=("Times", 20), text_color="darkgoldenrod1", border_width=5, border_color="darkgoldenrod1")
+  outText = ctk.CTkTextbox(master=root, width=root.winfo_screenwidth(), height=root.winfo_screenheight()//3-90, fg_color="grey25", font=("Times", 20), text_color="grey70", border_width=5, border_color="darkgoldenrod1")
   outText.grid(row=13, column=0, columnspan=8, rowspan=7)
-  outText.insert('1.0', text="Your message will appear here: ")
+  outText.insert('1.0', text="Your message will appear here...")
   outText.configure(state="disabled")
   
   root.mainloop()
